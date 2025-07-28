@@ -100,7 +100,6 @@
 }
 
 .heading-wrap {
-  width: 340px;
   position: relative;
   margin-top: -50px;
 }
@@ -723,10 +722,6 @@
 
   .heading-move {
     font-size: 5em;
-  }
-
-  .heading-wrap {
-    width: 290px;
   }
 
   .heading_interaction-wrap {
