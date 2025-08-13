@@ -98,13 +98,13 @@
             <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Career</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Portfolio</a></li>
+            <li class="nav-item"><a class="nav-link" href="portfolio/">Portfolio</a></li>
             <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
-        <div class="d-flex ms-lg-4 gap-2">
+        <!-- <div class="d-flex ms-lg-4 gap-2">
             <button class="btn btn-login">Log In</button>
             <button class="btn btn-signup">Sign Up</button>
-        </div>
+        </div> -->
     </div>
     </div>
 </nav>

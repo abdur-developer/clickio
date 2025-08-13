@@ -1,3 +1,7 @@
+<?php
+   include 'db/config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en" data-wf-page="8801709409266">   
    <?php include 'includes/main/head.php'; ?>
