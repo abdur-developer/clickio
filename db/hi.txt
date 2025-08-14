@@ -1,0 +1,4 @@
+user:   clickio
+pass:   SE260XjMQZse
+db:     clickio-3531303023bf
+host:   sdb-86.hosting.stackcp.net
