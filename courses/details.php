@@ -82,24 +82,15 @@
                                                         $result = mysqli_query($conn, $sql);
                                                         while ($module_details = mysqli_fetch_assoc($result)) {
                                                     ?>
-                                                    <li class="lecture-item" onclick="seeFree('<?=$module_details['is_free']?>')">
+                                                    <li class="lecture-item">
                                                         <div class="lecture-icon">
                                                             <i class="fas fa-play-circle"></i>
                                                         </div>
                                                         <div class="lecture-content">
                                                             <div class="lecture-title"><?=$module_details['title']?></div>
-                                                            <div class="lecture-meta">
-                                                                <?php if($module_details['is_free'] != '0') echo "<span class='tag free'>ফ্রি প্রিভিউ</span>"; ?>
-                                                                <span class="lecture-duration"><?=$module_details['time']?> মিনিট</span>
-                                                            </div>
                                                         </div>
                                                         <?php
-                                                            // echo "<i class='fas fa-check-circle lecture-status'></i>"; // completed
-                                                            if($module_details['is_free'] != '0') {
-                                                                echo "<i class='fas fa-eye lecture-status'></i>";
-                                                            } else {
-                                                                echo "<i class='fas fa-lock lecture-status'></i>";
-                                                            }
+                                                            echo "<i class='fas fa-lock lecture-status'></i>";
                                                         ?>                                          
                                                     </li>
                                                     <?php } ?>

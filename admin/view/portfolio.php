@@ -1,27 +1,19 @@
 <?php
     $id = isset($_GET['id']) ? decryptSt($_GET['id']) : null;
     if($id != null){
-        $sql = "SELECT * FROM product WHERE id = '$id'";
+        $sql = "SELECT * FROM portfolio WHERE id = '$id'";
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
     }else{
         $row = [
             'id' => null,
-            'name' => null,
             'type' => null,
-            'price' => null,
-            'old_price' => null,
-            'rating_count' => null,
-            'img' => null,
             'description' => null,
-            'review' => null,
-            'status' => null
+            'img' => null,
+            'title' => null
         ];
     }
 ?>
-
-<!-- Quill CSS -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <div class="container my-5">
     <div class="card shadow-lg border-0">
@@ -36,48 +28,18 @@
         
         <div class="card-body">
             <!-- <php if ($result->num_rows > 0): ?> -->
-            <form action="action/update_product.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form action="action/update_portfolio.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']) ?>">
-                <input type="hidden" name="description" id="quill-html">
                 
                 <div class="row g-4">
                     <!-- Left Column -->
                     <div class="col-md-6">
                         <!-- Title -->
                         <div class="form-floating mb-4">
-                            <input type="text" name="name" class="form-control" id="name" 
-                                   value="<?= htmlspecialchars($row['name']) ?>" required>
-                            <label for="name"><i class="fas fa-heading me-1 text-muted"></i>Title</label>
-                            <div class="invalid-feedback">Please provide a name</div>
-                        </div>
-                        
-                        <!-- Category -->
-                        <div class="form-floating mb-4">
-                            <input type="text" name="type" class="form-control" id="type" 
-                                   value="<?= htmlspecialchars($row['type']) ?>" required>
-                            <label for="type"><i class="fas fa-building me-1 text-muted"></i>Category</label>
-                            <div class="invalid-feedback">Please provide an type name</div>
-                        </div>
-                                                
-                        <!-- Price -->
-                        <div class="form-floating mb-4">
-                            <input type="number" name="price" class="form-control" id="price" 
-                                   value="<?= htmlspecialchars($row['price']) ?>">
-                            <label for="price"><i class="fas fa-info-circle me-1 text-muted"></i>Price</label>
-                        </div>
-                                                
-                        <!--Old  Price -->
-                        <div class="form-floating mb-4">
-                            <input type="number" name="old_price" class="form-control" id="old_price" 
-                                   value="<?= htmlspecialchars($row['old_price']) ?>">
-                            <label for="old_price"><i class="fas fa-info-circle me-1 text-muted"></i>Old Price</label>
-                        </div>
-                                                
-                        <!--rating count -->
-                        <div class="form-floating mb-4">
-                            <input type="number" name="rating_count" class="form-control" id="rating_count" 
-                                   value="<?= htmlspecialchars($row['rating_count']) ?>">
-                            <label for="rating_count"><i class="fas fa-info-circle me-1 text-muted"></i>Rating Count</label>
+                            <input type="text" name="title" class="form-control" id="title" 
+                                   value="<?= htmlspecialchars($row['title']) ?>" required>
+                            <label for="title"><i class="fas fa-heading me-1 text-muted"></i>Title</label>
+                            <div class="invalid-feedback">Please provide a title</div>
                         </div>
                         
                         <!-- Image Upload -->
@@ -102,29 +64,22 @@
                     
                     <!-- Right Column -->
                     <div class="col-md-6">
-                        <!-- Description with Quill Editor -->
-                        <div class="mb-4">
-                            <label for="quill-editor" class="form-label">
-                                <i class="fas fa-align-left me-1 text-muted"></i>Description
-                            </label>
-                            <div id="quill-editor" style="height: 300px;">
-                                <?= $row['description'] ?>
-                            </div>
-                            <small class="text-muted">Write detailed text with formatting options</small>
+                        
+                        <!-- Type -->
+                        <div class="form-floating mb-4">
+                            <select name="type" class="form-control" id="type">
+                                <option value="0" <?= $row['type'] === '0' ? 'selected' : '' ?>>Website</option>
+                                <option value="1" <?= $row['type'] === '1' ? 'selected' : '' ?>>App</option>
+                                <option value="2" <?= $row['type'] === '2' ? 'selected' : '' ?>>Graphics</option>
+                            </select>
+                            <label for="type"><i class="fas fa-calendar-alt me-1 text-muted"></i>Type</label>
                         </div>
                         
-                        <!-- Date -->
+                        <!-- Description -->
                         <div class="form-floating mb-4">
-                            <input type="text" name="status" class="form-control" id="status" 
-                                   value="<?= htmlspecialchars($row['status']) ?>">
-                            <label for="status"><i class="fas fa-calendar-alt me-1 text-muted"></i>Status</label>
-                        </div>
-                        
-                        <!-- review -->
-                        <div class="form-floating mb-4">
-                            <input type="text" name="review" class="form-control" id="review" 
-                                   value="<?= htmlspecialchars($row['review']) ?>">
-                            <label for="review"><i class="fas fa-users me-1 text-muted"></i>Review</label>
+                            <input type="text" name="description" class="form-control" id="description" 
+                                   value="<?= htmlspecialchars($row['description']) ?>">
+                            <label for="description"><i class="fas fa-users me-1 text-muted"></i>Description</label>
                         </div>
                     </div>
                 </div>

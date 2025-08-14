@@ -1,5 +1,5 @@
 <?php
-    include_once "../../include/dbcon.php";
+include_once "../../db/config.php";
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('Location: ../../admin/?q=course&error=Invalid+request');

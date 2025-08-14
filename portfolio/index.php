@@ -157,7 +157,7 @@
                     while($row = mysqli_fetch_assoc($portfolio)) { ?>
                         <div class="col-lg-4 col-md-6 portfolio-item" data-category="<?= $row['type'] == 0 ? 'website' : ($row['type'] == 1 ? 'app' : 'graphics') ?>">
                             <div class="card portfolio-card">
-                                <img src="<?=$row['img']?>" class="card-img-top" alt="<?=$row['title']?>">
+                                <img src="../admin/upload/<?=$row['img']?>" class="card-img-top" alt="<?=$row['title']?>">
                                 <div class="card-body">
                                     <span class="project-category"><i class="fas <?= $row['type'] == 0 ? 'fa-globe' : ($row['type'] == 1 ? 'fa-mobile-alt' : 'fa-paint-brush') ?> service-icon"></i><?= $row['type'] == 0 ? 'Website Development' : ($row['type'] == 1 ? 'App Development' : 'Graphics Design') ?></span>
                                     <h5 class="card-title"><?=$row['title']?></h5>

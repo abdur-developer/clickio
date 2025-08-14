@@ -1,5 +1,5 @@
 <?php
-include_once "../../include/dbcon.php";
+include_once "../../db/config.php";
 include_once "../function.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -8,37 +8,31 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Get form data
-$id = $_POST['id'];
-$title = trim($_POST['title']);
-$provider = trim($_POST['provider']);
-$instructor = trim($_POST['instructor']);
-$description = trim($_POST['description']); // Short description
-$overview = $_POST['overview']; // Quill HTML input
-$ki_thakbe = json_encode($_POST['ki_thakbe'] ?? []);
-$price = floatval($_POST['price']);
-$rating = floatval($_POST['rating']);
-$users = intval($_POST['users']);
-$status = intval($_POST['status']);
-$badge = trim($_POST['badge']);
-$old_price = isset($_POST['old_price']) ? floatval($_POST['old_price']) : null;
-$feature_video_id = trim($_POST['feature_video_id']);
-$remove_img = isset($_POST['remove_img']);
+$id          = $_POST['id'] ?? '';
+$title       = trim($_POST['title'] ?? '');
+$alt         = trim($_POST['alt'] ?? '');
+$overview    = $_POST['overview'] ?? '';
+$ki_thakbe   = json_encode($_POST['ki_thakbe'] ?? []);
+$description = trim($_POST['description'] ?? '');
+$joined      = intval($_POST['joined'] ?? 0);
+$old_price   = isset($_POST['old_price']) ? floatval($_POST['old_price']) : null;
+$section     = intval($_POST['section'] ?? 0);
+$duration    = trim($_POST['duration'] ?? '');
+$lessons     = intval($_POST['lessons'] ?? 0);
+$price       = floatval($_POST['price'] ?? 0);
+$status      = intval($_POST['status'] ?? 0);
+$url_hint    = trim($_POST['url_hint'] ?? '');
+$remove_img  = isset($_POST['remove_img']);
 
-/*
-    id overview title provider instructor
-    description price old_price ki_thakbe
-    img rating users badge feature_video_id
-*/
-
-if (empty($title) || empty($provider)) {
-    header("Location: ../../admin/?e=course&id=" . encryptSt($id) . "&error=Title+and+Provider+are+required+fields.");
+if (empty($title)) {
+    header("Location: ../../admin/?e=course&id=" . encryptSt($id) . "&error=Title+is+a+required+field.");
     exit();
 }
 
 try {
     $img_name = null;
 
-    // Get current image (if exists)
+    // Get current image
     $current_img_stmt = $conn->prepare("SELECT img FROM course WHERE id = ?");
     $current_img_stmt->bind_param("i", $id);
     $current_img_stmt->execute();
@@ -46,16 +40,14 @@ try {
     $current_img = $current_img_result->fetch_assoc()['img'] ?? null;
     $current_img_stmt->close();
 
-    // Upload new image if present
+    // Upload new image
     if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
         $upload = uploadImage($_FILES['img'], '../upload/', 'course_');
 
         if ($upload['success']) {
-            // Delete previous image if exists
             if (!empty($current_img) && file_exists('../upload/' . $current_img)) {
                 unlink('../upload/' . $current_img);
             }
-
             $img_name = basename($upload['target_file']);
         } else {
             header("Location: ../../admin/?e=course&id=" . encryptSt($id) . "&error=" . urlencode($upload['message']));
@@ -63,34 +55,29 @@ try {
         }
 
     } elseif ($remove_img && !empty($current_img)) {
-        // Remove existing image
         if (file_exists('../upload/' . $current_img)) {
             unlink('../upload/' . $current_img);
         }
         $img_name = null;
 
     } else {
-        // Keep existing image
         $img_name = $current_img;
     }
 
-    // Update or Insert
+    // Update
     if (!empty($id)) {
         $sql = "UPDATE course SET 
-                title = ?, provider = ?, instructor = ?, description = ?, 
-                overview = ?, ki_thakbe = ?, price = ?, old_price = ?, 
-                feature_video_id = ?, img = ?, rating = ?, users = ?, badge = ? , status = ?
-            WHERE id = ?";
+                title=?, alt=?, overview=?, ki_thakbe=?, img=?, description=?, 
+                joined=?, old_price=?, section=?, duration=?, lessons=?, price=?, status=?, url_hint=?
+            WHERE id=?";
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
-            "ssssssddsssdsii",
-            $title, $provider, $instructor, $description,
-            $overview, $ki_thakbe, $price, $old_price,
-            $feature_video_id, $img_name,
-            $rating, $users, $badge, $status, $id
+            "ssssssidsisdssi",
+            $title, $alt, $overview, $ki_thakbe, $img_name, $description,
+            $joined, $old_price, $section, $duration, $lessons, $price, $status, $url_hint, $id
         );
-        
+
         if ($stmt->execute()) {
             $stmt->close();
             header("Location: ../../admin/?e=course&id=" . encryptSt($id) . "&success=Course+updated+successfully!");
@@ -98,20 +85,21 @@ try {
         } else {
             throw new Exception("Database error: " . $stmt->error);
         }
-        } else {
+
+    } 
+    // Insert
+    else {
         $sql = "INSERT INTO course 
-                (title, provider, instructor, description, overview, 
-                ki_thakbe, price, old_price, feature_video_id, img, 
-                rating, users, badge, status) 
+                (title, alt, overview, ki_thakbe, img, description, joined, old_price, section, duration, lessons, price, status, url_hint)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
-            "ssssssddsssdsi",
-            $title, $provider, $instructor, $description, $overview,
-            $ki_thakbe, $price, $old_price, $feature_video_id, $img_name,
-            $rating, $users, $badge, $status
+            "ssssssidsisdss",
+            $title, $alt, $overview, $ki_thakbe, $img_name, $description,
+            $joined, $old_price, $section, $duration, $lessons, $price, $status, $url_hint
         );
+
         if ($stmt->execute()) {
             $new_id = $conn->insert_id;
             $stmt->close();

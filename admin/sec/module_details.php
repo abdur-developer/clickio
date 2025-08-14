@@ -23,26 +23,15 @@
                     <table class="table table-hover user-table">
                         <thead>
                             <tr>
-                                <th width="40%">Title</th>
-                                <th width="15%">Time</th>
-                                <th width="10%">Is Free</th>
-                                <th width="25%" class="text-center">Actions</th>
+                                <th width="65%">Title</th>
+                                <th width="35%" class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td><?= htmlspecialchars($row["title"]) ?></td>
-                                <td><?= htmlspecialchars($row["time"]) ?></td>
-                                <td>
-                                    <button class="btn btn-sm <?= $row['is_free'] == 0 ? 'btn-success' : 'btn-secondary' ?>">
-                                        <?= $row['is_free'] == 1 ? 'Free' : 'Paid' ?>
-                                    </button>
-                                </td>
                                 <td class="text-center action-buttons">
-                                    <button class="btn btn-sm btn-view me-1" title="View" onclick="openVideo('<?= htmlspecialchars($row['video']) ?>')">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
                                     <button class="btn btn-sm btn-edit me-1" title="Edit" onclick="location.href='?e=module_details&id=<?= encryptSt($row['id']) ?>&module_id=<?=$module_id?>'">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -164,12 +153,12 @@
 
         document.getElementById('btnConfirmDelete').addEventListener('click', function() {
             const idToDelete = this.getAttribute('data-id');
-            fetch('api/delete_with_vid.php', {
+            fetch('api/delete.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: idToDelete })
+                body: JSON.stringify({ id: idToDelete, table: 'module_details' })
             })
             .then(response => response.json())
             .then(data => {

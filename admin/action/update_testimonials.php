@@ -1,5 +1,5 @@
 <?php
-include_once "../../include/dbcon.php";
+include_once "../../db/config.php";
 include_once "../function.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

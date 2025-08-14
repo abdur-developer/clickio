@@ -13,11 +13,11 @@
     }
 
     // Fetch data
-    $sql = "SELECT * FROM product $search_condition ORDER BY id ASC LIMIT $start_from, $limit";
+    $sql = "SELECT * FROM portfolio $search_condition ORDER BY id ASC LIMIT $start_from, $limit";
     $result = $conn->query($sql);
 
     // Total records count
-    $count_sql = "SELECT COUNT(*) as total FROM product $search_condition";
+    $count_sql = "SELECT COUNT(*) as total FROM portfolio $search_condition";
     $total_result = $conn->query($count_sql);
     $total_rows = $total_result->fetch_assoc()['total'];
     $total_pages = ceil($total_rows / $limit);
@@ -30,23 +30,23 @@
     <div class="card shadow-lg">
         <div class="card-header text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-0"><i class="fas fa-users-cog me-2"></i>Product Management</h3>
+                <h3 class="mb-0"><i class="fas fa-users-cog me-2"></i>Portfolio Management</h3>
                 <div class="d-flex align-items-center">
                     <form class="d-flex search-box" method="get" action="">
                         <div class="input-group">
-                            <input type="hidden" name="q" value="product">
-                            <input type="text" name="search" class="form-control border-end-0" placeholder="Search product..." value="<?= htmlspecialchars($search) ?>">
+                            <input type="hidden" name="q" value="portfolio">
+                            <input type="text" name="search" class="form-control border-end-0" placeholder="Search portfolio..." value="<?= htmlspecialchars($search) ?>">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
                             <?php if (!empty($search)): ?>
-                                <a href="?q=product" class="btn btn-danger ms-1">
+                                <a href="?q=portfolio" class="btn btn-danger ms-1">
                                     <i class="fas fa-times"></i>
                                 </a>
                             <?php endif; ?>
                         </div>
                     </form>
-                    <button class="btn btn-success ms-3 add-new" onclick="location.href='?e=product'">
+                    <button class="btn btn-success ms-3 add-new" onclick="location.href='?e=portfolio'">
                         <i class="fas fa-plus me-1"></i> Add new
                     </button>
                 </div>
@@ -59,20 +59,23 @@
                     <table class="table table-hover user-table">
                         <thead>
                             <tr>
-                                <th width="40%">Name</th>
+                                <th width="40%">Title</th>
                                 <th width="20%">Type</th>
-                                <th width="20%">Price</th>
                                 <th width="20%" class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td><?= htmlspecialchars($row["name"]) ?></td>
-                                <td><?= htmlspecialchars($row["type"]) ?></td>
-                                <td><?= htmlspecialchars($row["price"]) ?></td>
+                                <td><?= htmlspecialchars($row["title"]) ?></td>
+                                <td>
+                                    <?php
+                                        $types = [0 => 'Web',1 => 'App',2 => 'Graphics'];
+                                        echo isset($types[$row["type"]]) ? $types[$row["type"]] : 'Unknown';
+                                    ?>
+                                </td>
                                 <td class="text-center action-buttons">
-                                    <button class="btn btn-sm btn-edit me-1" title="Edit" onclick="location.href='?e=product&id=<?= encryptSt($row['id']) ?>'">
+                                    <button class="btn btn-sm btn-edit me-1" title="Edit" onclick="location.href='?e=portfolio&id=<?= encryptSt($row['id']) ?>'">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn btn-sm btn-delete" title="Delete" data-bs-toggle="modal" data-id="<?= htmlspecialchars($row["id"]) ?>"  data-bs-target="#deleteItemModel">
@@ -98,14 +101,14 @@
                         <ul class="pagination mb-0">
                             <!-- First Page -->
                             <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?q=product&page=1<?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="First">
+                                <a class="page-link" href="?q=portfolio&page=1<?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="First">
                                     <i class="fas fa-angle-double-left"></i>
                                 </a>
                             </li>
                             
                             <!-- Previous Page -->
                             <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?q=product&page=<?= $page-1 ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Previous">
+                                <a class="page-link" href="?q=portfolio&page=<?= $page-1 ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Previous">
                                     <i class="fas fa-angle-left"></i>
                                 </a>
                             </li>
@@ -117,7 +120,7 @@
                             
                             <?php for ($i = $start_range; $i <= $end_range; $i++): ?>
                                 <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                    <a class="page-link" href="?q=product&page=<?= $i ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>"><?= $i ?></a>
+                                    <a class="page-link" href="?q=portfolio&page=<?= $i ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>"><?= $i ?></a>
                                 </li>
                             <?php endfor; ?>
                             
@@ -127,14 +130,14 @@
                             
                             <!-- Next Page -->
                             <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?q=product&page=<?= $page+1 ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Next">
+                                <a class="page-link" href="?q=portfolio&page=<?= $page+1 ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Next">
                                     <i class="fas fa-angle-right"></i>
                                 </a>
                             </li>
                             
                             <!-- Last Page -->
                             <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?q=product&page=<?= $total_pages ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Last">
+                                <a class="page-link" href="?q=portfolio&page=<?= $total_pages ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>" aria-label="Last">
                                     <i class="fas fa-angle-double-right"></i>
                                 </a>
                             </li>
@@ -148,9 +151,9 @@
                     </div>
                     <h4 class="text-muted mb-3">
                         <?php if (!empty($search)): ?>
-                            No product found matching your search criteria
+                            No portfolio found matching your search criteria
                         <?php else: ?>
-                            No product found in the database
+                            No portfolio found in the database
                         <?php endif; ?>
                     </h4>
                     <?php if (!empty($search)): ?>
@@ -158,7 +161,7 @@
                             <i class="fas fa-undo me-1"></i> Reset Search
                         </a>
                     <?php else: ?>
-                        <button class="btn btn-primary mt-2 add-new" onclick="location.href='?e=product'">
+                        <button class="btn btn-primary mt-2 add-new" onclick="location.href='?e=portfolio'">
                             <i class="fas fa-plus me-1"></i> Add New
                         </button>
                     <?php endif; ?>
@@ -210,7 +213,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: idToDelete, table: 'product' })
+                body: JSON.stringify({ id: idToDelete, table: 'portfolio' })
             })
             .then(response => response.json())
             .then(data => {
